@@ -1,0 +1,347 @@
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f5f6fa;
+  color: #222;
+  min-height: 100vh;
+}
+
+/* ── App Layout ── */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background: #1a6b3c;
+  color: white;
+  padding: 16px 24px;
+}
+
+.app-header h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  gap: 0;
+}
+
+/* ── Sidebar (Player Bank) ── */
+.sidebar {
+  width: 220px;
+  min-width: 180px;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Main Content ── */
+.main-content {
+  flex: 1;
+  padding: 20px 24px;
+  overflow-x: auto;
+}
+
+.roster-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.roster-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* ── Export Button ── */
+.export-btn {
+  background: #1a6b3c;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.export-btn:hover {
+  background: #155730;
+}
+
+/* ── Player Bank ── */
+.player-bank h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #1a6b3c;
+}
+
+.add-player-form {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.add-player-form input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  min-width: 0;
+}
+
+.add-player-form input:focus {
+  outline: none;
+  border-color: #1a6b3c;
+}
+
+.add-player-form button {
+  background: #1a6b3c;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.add-player-form button:disabled {
+  background: #aaa;
+  cursor: default;
+}
+
+.player-list {
+  list-style: none;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 4px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.player-item:last-child {
+  border-bottom: none;
+}
+
+.player-name {
+  font-size: 0.88rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+
+.remove-btn:hover {
+  color: #c0392b;
+}
+
+.empty-bank {
+  font-size: 0.82rem;
+  color: #aaa;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.bank-count {
+  font-size: 0.78rem;
+  color: #999;
+  margin-top: 10px;
+}
+
+/* ── Roster Table ── */
+.roster-grid-wrapper {
+  overflow-x: auto;
+}
+
+.roster-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 600px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  font-size: 0.88rem;
+}
+
+.roster-table thead th {
+  background: #1a6b3c;
+  color: white;
+  padding: 10px 12px;
+  text-align: center;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.roster-table thead th.position-col {
+  text-align: left;
+  min-width: 110px;
+}
+
+.roster-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.roster-table tbody tr:hover {
+  background: #f0f7f3;
+}
+
+.position-label {
+  padding: 8px 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: #444;
+}
+
+.assignment-cell {
+  padding: 5px 8px;
+  text-align: center;
+}
+
+.assignment-cell select {
+  width: 100%;
+  min-width: 100px;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.83rem;
+  background: white;
+  cursor: pointer;
+  color: #555;
+}
+
+.assignment-cell select.assigned {
+  border-color: #1a6b3c;
+  color: #1a6b3c;
+  font-weight: 500;
+}
+
+.assignment-cell select:focus {
+  outline: none;
+  border-color: #1a6b3c;
+  box-shadow: 0 0 0 2px rgba(26,107,60,0.15);
+}
+
+/* ── Bench Row ── */
+.bench-row {
+  border-top: 2px solid #e0e0e0;
+  background: #fef9ec !important;
+}
+
+.bench-label {
+  font-weight: 600;
+  color: #7a5c00;
+}
+
+.bench-cell {
+  padding: 6px 8px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.bench-player {
+  display: inline-block;
+  background: #fde68a;
+  color: #78450a;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.78rem;
+  margin: 2px;
+  white-space: nowrap;
+}
+
+.bench-empty {
+  color: #bbb;
+  font-size: 0.85rem;
+}
+
+/* ── Print / PDF Export ── */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+
+  .app-body {
+    display: block;
+  }
+
+  .main-content {
+    padding: 0;
+  }
+
+  .roster-table {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    font-size: 0.8rem;
+  }
+
+  .roster-table thead th {
+    background: #1a6b3c !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .assignment-cell select {
+    border: none;
+    appearance: none;
+    -webkit-appearance: none;
+    pointer-events: none;
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    color: #222;
+    font-weight: 500;
+  }
+
+  .bench-row {
+    background: #fef9ec !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .bench-player {
+    background: #fde68a !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .roster-header h2 {
+    display: block;
+  }
+}
