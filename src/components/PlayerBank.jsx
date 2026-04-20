@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function PlayerBank({ players, roster, innings, onAdd, onRemove }) {
+export default function PlayerBank({ players, playerColors, roster, innings, onAdd, onRemove }) {
   const [input, setInput] = useState('')
 
   function isAssigned(name) {
@@ -38,6 +38,7 @@ export default function PlayerBank({ players, roster, innings, onAdd, onRemove }
         <ul className="player-list">
           {players.map(name => (
             <li key={name} className="player-item">
+              <span className="player-color-dot" style={{ background: playerColors[name] }} />
               <span className="player-name">{name}</span>
               <button
                 className="remove-btn"

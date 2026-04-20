@@ -33,6 +33,35 @@ function getInitials(name) {
   return name.trim().split(/\s+/).map(w => w[0].toUpperCase()).join('')
 }
 
+// Ordered so sequential entries land on opposite sides of the color wheel
+const PLAYER_COLORS = [
+  '#e53935', // 1  red
+  '#1565c0', // 2  dark blue
+  '#2e7d32', // 3  dark green
+  '#f57c00', // 4  orange
+  '#7b1fa2', // 5  purple
+  '#00838f', // 6  teal
+  '#f9a825', // 7  amber
+  '#283593', // 8  indigo
+  '#558b2f', // 9  olive
+  '#d81b60', // 10 hot pink
+  '#0277bd', // 11 sky blue
+  '#bf360c', // 12 rust
+  '#00695c', // 13 dark teal
+  '#6a1b9a', // 14 deep purple
+  '#c62828', // 15 dark red
+  '#039be5', // 16 light blue
+  '#33691e', // 17 forest green
+  '#ad1457', // 18 dark pink
+  '#4527a0', // 19 deep indigo
+  '#e65100', // 20 burnt orange
+  '#006064', // 21 dark cyan
+  '#880e4f', // 22 maroon
+  '#43a047', // 23 medium green
+  '#1976d2', // 24 medium blue
+  '#6d4c41', // 25 brown
+]
+
 function emptyInning() {
   const inning = {}
   for (const pos of POSITIONS) inning[pos] = ''
@@ -41,6 +70,7 @@ function emptyInning() {
 
 export default function App() {
   const [players, setPlayers] = useState([])
+  const [playerColors, setPlayerColors] = useState({})
   const [innings, setInnings] = useState([1])
   const [roster, setRoster] = useState(() => ({ 1: emptyInning() }))
   const [activeInning, setActiveInning] = useState(1)
@@ -56,10 +86,19 @@ export default function App() {
     const trimmed = name.trim()
     if (!trimmed || players.includes(trimmed)) return
     setPlayers(prev => [...prev, trimmed])
+    setPlayerColors(prev => ({
+      ...prev,
+      [trimmed]: PLAYER_COLORS[Object.keys(prev).length % PLAYER_COLORS.length],
+    }))
   }
 
   function removePlayer(name) {
     setPlayers(prev => prev.filter(p => p !== name))
+    setPlayerColors(prev => {
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
     setRoster(prev => {
       const next = {}
       for (const inning of innings) {
@@ -98,6 +137,7 @@ export default function App() {
         <aside className="sidebar no-print">
           <PlayerBank
             players={players}
+            playerColors={playerColors}
             roster={roster}
             innings={innings}
             onAdd={addPlayer}
@@ -169,9 +209,17 @@ export default function App() {
                         onClick={() => setActiveInning(i)}
                       >
                         <td className="summary-inning-col">{i}</td>
-                        {POSITIONS.map(pos => (
-                          <td key={pos}>{getInitials(roster[i][pos])}</td>
-                        ))}
+                        {POSITIONS.map(pos => {
+                          const player = roster[i][pos]
+                          return (
+                            <td
+                              key={pos}
+                              style={player ? { color: playerColors[player], fontWeight: 700 } : undefined}
+                            >
+                              {getInitials(player)}
+                            </td>
+                          )
+                        })}
                       </tr>
                     ))}
                   </tbody>
