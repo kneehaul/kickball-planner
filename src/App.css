@@ -34,7 +34,6 @@ body {
 .app-body {
   display: flex;
   flex: 1;
-  gap: 0;
 }
 
 /* ── Sidebar (Player Bank) ── */
@@ -53,6 +52,7 @@ body {
   flex: 1;
   padding: 20px 24px;
   overflow-x: auto;
+  min-width: 0;
 }
 
 .roster-header {
@@ -180,95 +180,137 @@ body {
   margin-top: 10px;
 }
 
-/* ── Roster Table ── */
-.roster-grid-wrapper {
-  overflow-x: auto;
+/* ── Inning Tabs ── */
+.inning-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0;
 }
 
-.roster-table {
-  border-collapse: collapse;
-  width: 100%;
-  min-width: 600px;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  font-size: 0.88rem;
+.inning-tab {
+  background: none;
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  padding: 7px 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  transition: color 0.12s, background 0.12s;
 }
 
-.roster-table thead th {
-  background: #1a6b3c;
-  color: white;
-  padding: 10px 12px;
-  text-align: center;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.roster-table thead th.position-col {
-  text-align: left;
-  min-width: 110px;
-}
-
-.roster-table tbody tr:nth-child(even) {
-  background: #f9fafb;
-}
-
-.roster-table tbody tr:hover {
+.inning-tab:hover {
+  color: #1a6b3c;
   background: #f0f7f3;
 }
 
-.position-label {
-  padding: 8px 12px;
-  font-weight: 500;
-  white-space: nowrap;
-  color: #444;
+.inning-tab.active {
+  color: #1a6b3c;
+  font-weight: 700;
+  border-color: #e0e0e0;
+  border-bottom-color: #f5f6fa;
+  background: #f5f6fa;
 }
 
-.assignment-cell {
-  padding: 5px 8px;
-  text-align: center;
+/* ── Print inning label (hidden on screen) ── */
+.print-inning-label {
+  display: none;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
 
-.assignment-cell select {
+/* ── Field ── */
+.field-container {
+  max-width: 680px;
+}
+
+.field-svg {
   width: 100%;
-  min-width: 100px;
-  padding: 4px 6px;
-  border: 1px solid #ddd;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  overflow: visible;
+}
+
+/* ── Position Nodes (inside SVG foreignObject) ── */
+.pos-node {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.93);
+  border-radius: 6px;
+  padding: 4px 5px 3px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.pos-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #1a6b3c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.pos-select {
+  width: 100%;
+  font-size: 0.72rem;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 0.83rem;
+  padding: 2px 3px;
   background: white;
   cursor: pointer;
-  color: #555;
+  color: #666;
+  flex: 1;
+  min-height: 0;
 }
 
-.assignment-cell select.assigned {
+.pos-select.assigned {
   border-color: #1a6b3c;
   color: #1a6b3c;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-.assignment-cell select:focus {
+.pos-select:focus {
   outline: none;
   border-color: #1a6b3c;
-  box-shadow: 0 0 0 2px rgba(26,107,60,0.15);
+  box-shadow: 0 0 0 2px rgba(26,107,60,0.2);
 }
 
-/* ── Bench Row ── */
-.bench-row {
-  border-top: 2px solid #e0e0e0;
-  background: #fef9ec !important;
+/* ── Bench Section ── */
+.bench-section {
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: #fef9ec;
+  border-radius: 8px;
+  border: 1px solid #fde68a;
+  max-width: 680px;
 }
 
-.bench-label {
+.bench-section h3 {
+  font-size: 0.85rem;
   font-weight: 600;
   color: #7a5c00;
+  margin-bottom: 8px;
 }
 
-.bench-cell {
-  padding: 6px 8px;
-  text-align: center;
-  vertical-align: top;
+.bench-players {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .bench-player {
@@ -276,21 +318,25 @@ body {
   background: #fde68a;
   color: #78450a;
   border-radius: 12px;
-  padding: 2px 8px;
-  font-size: 0.78rem;
-  margin: 2px;
+  padding: 3px 10px;
+  font-size: 0.8rem;
   white-space: nowrap;
 }
 
 .bench-empty {
-  color: #bbb;
+  color: #aaa;
   font-size: 0.85rem;
+  font-style: italic;
 }
 
 /* ── Print / PDF Export ── */
 @media print {
   .no-print {
     display: none !important;
+  }
+
+  .print-inning-label {
+    display: block;
   }
 
   body {
@@ -305,43 +351,27 @@ body {
     padding: 0;
   }
 
-  .roster-table {
+  .field-svg {
+    box-shadow: none;
+    max-width: 100%;
+  }
+
+  .pos-node {
+    background: white;
     box-shadow: none;
     border: 1px solid #ccc;
-    font-size: 0.8rem;
   }
 
-  .roster-table thead th {
-    background: #1a6b3c !important;
-    color: white !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .assignment-cell select {
-    border: none;
-    appearance: none;
-    -webkit-appearance: none;
-    pointer-events: none;
-    font-size: 0.8rem;
-    padding: 2px 4px;
-    color: #222;
-    font-weight: 500;
-  }
-
-  .bench-row {
+  .bench-section {
     background: #fef9ec !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    border: 1px solid #fde68a;
   }
 
   .bench-player {
     background: #fde68a !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-  }
-
-  .roster-header h2 {
-    display: block;
   }
 }

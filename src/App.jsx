@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PlayerBank from './components/PlayerBank'
-import RosterGrid from './components/RosterGrid'
+import FieldView from './components/FieldView'
 
 const POSITIONS = [
   'Pitcher',
@@ -31,6 +31,7 @@ function buildEmptyRoster() {
 export default function App() {
   const [players, setPlayers] = useState([])
   const [roster, setRoster] = useState(buildEmptyRoster)
+  const [activeInning, setActiveInning] = useState(INNINGS[0])
 
   function addPlayer(name) {
     const trimmed = name.trim()
@@ -40,7 +41,6 @@ export default function App() {
 
   function removePlayer(name) {
     setPlayers(prev => prev.filter(p => p !== name))
-    // Clear this player from all inning assignments
     setRoster(prev => {
       const next = {}
       for (const inning of INNINGS) {
@@ -63,6 +63,13 @@ export default function App() {
     }))
   }
 
+  function getBench(inning) {
+    const assigned = new Set(Object.values(roster[inning]).filter(Boolean))
+    return players.filter(p => !assigned.has(p))
+  }
+
+  const bench = getBench(activeInning)
+
   return (
     <div className="app">
       <header className="app-header no-print">
@@ -79,19 +86,45 @@ export default function App() {
           />
         </aside>
         <main className="main-content">
-          <div className="roster-header">
-            <h2>Roster</h2>
-            <button className="export-btn no-print" onClick={() => window.print()}>
+          <div className="roster-header no-print">
+            <h2>Field Lineup</h2>
+            <button className="export-btn" onClick={() => window.print()}>
               Export to PDF
             </button>
           </div>
-          <RosterGrid
+
+          <div className="inning-tabs no-print">
+            {INNINGS.map(i => (
+              <button
+                key={i}
+                className={`inning-tab${activeInning === i ? ' active' : ''}`}
+                onClick={() => setActiveInning(i)}
+              >
+                Inning {i}
+              </button>
+            ))}
+          </div>
+
+          <div className="print-inning-label">Inning {activeInning}</div>
+
+          <FieldView
             players={players}
-            roster={roster}
-            positions={POSITIONS}
-            innings={INNINGS}
-            onAssign={assignPlayer}
+            inningRoster={roster[activeInning]}
+            onAssign={(position, playerName) => assignPlayer(activeInning, position, playerName)}
           />
+
+          <div className="bench-section">
+            <h3>Bench — Inning {activeInning}</h3>
+            <div className="bench-players">
+              {bench.length === 0 ? (
+                <span className="bench-empty">Everyone is assigned</span>
+              ) : (
+                bench.map(name => (
+                  <span key={name} className="bench-player">{name}</span>
+                ))
+              )}
+            </div>
+          </div>
         </main>
       </div>
     </div>
