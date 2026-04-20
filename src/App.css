@@ -216,6 +216,18 @@ body {
   background: #f5f6fa;
 }
 
+.add-inning-btn {
+  color: #1a6b3c;
+  opacity: 0.7;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.add-inning-btn:hover {
+  opacity: 1;
+  background: #e8f5ee;
+}
+
 /* ── Print inning label (hidden on screen) ── */
 .print-inning-label {
   display: none;

@@ -15,23 +15,24 @@ const POSITIONS = [
   'Right Field',
 ]
 
-const INNINGS = [1, 2, 3, 4, 5, 6]
-
-function buildEmptyRoster() {
-  const roster = {}
-  for (const inning of INNINGS) {
-    roster[inning] = {}
-    for (const pos of POSITIONS) {
-      roster[inning][pos] = ''
-    }
-  }
-  return roster
+function emptyInning() {
+  const inning = {}
+  for (const pos of POSITIONS) inning[pos] = ''
+  return inning
 }
 
 export default function App() {
   const [players, setPlayers] = useState([])
-  const [roster, setRoster] = useState(buildEmptyRoster)
-  const [activeInning, setActiveInning] = useState(INNINGS[0])
+  const [innings, setInnings] = useState([1])
+  const [roster, setRoster] = useState(() => ({ 1: emptyInning() }))
+  const [activeInning, setActiveInning] = useState(1)
+
+  function addInning() {
+    const next = innings[innings.length - 1] + 1
+    setInnings(prev => [...prev, next])
+    setRoster(prev => ({ ...prev, [next]: emptyInning() }))
+    setActiveInning(next)
+  }
 
   function addPlayer(name) {
     const trimmed = name.trim()
@@ -43,7 +44,7 @@ export default function App() {
     setPlayers(prev => prev.filter(p => p !== name))
     setRoster(prev => {
       const next = {}
-      for (const inning of INNINGS) {
+      for (const inning of innings) {
         next[inning] = {}
         for (const pos of POSITIONS) {
           next[inning][pos] = prev[inning][pos] === name ? '' : prev[inning][pos]
@@ -80,7 +81,7 @@ export default function App() {
           <PlayerBank
             players={players}
             roster={roster}
-            innings={INNINGS}
+            innings={innings}
             onAdd={addPlayer}
             onRemove={removePlayer}
           />
@@ -94,7 +95,7 @@ export default function App() {
           </div>
 
           <div className="inning-tabs no-print">
-            {INNINGS.map(i => (
+            {innings.map(i => (
               <button
                 key={i}
                 className={`inning-tab${activeInning === i ? ' active' : ''}`}
@@ -103,6 +104,9 @@ export default function App() {
                 Inning {i}
               </button>
             ))}
+            <button className="inning-tab add-inning-btn" onClick={addInning}>
+              + Add Inning
+            </button>
           </div>
 
           <div className="print-inning-label">Inning {activeInning}</div>
