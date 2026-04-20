@@ -172,6 +172,7 @@ export default function App() {
             <div className="field-side">
               <FieldView
                 players={players}
+                playerColors={playerColors}
                 inningRoster={roster[activeInning]}
                 onAssign={(position, playerName) => assignPlayer(activeInning, position, playerName)}
               />
@@ -237,6 +238,7 @@ export default function App() {
                   <h2 className="print-inning-label">Inning {i}</h2>
                   <FieldView
                     players={players}
+                    playerColors={playerColors}
                     inningRoster={roster[i]}
                     onAssign={() => {}}
                   />
