@@ -136,6 +136,16 @@ export default function App() {
     }
   }
 
+  function clearPlayers() {
+    setPlayers([])
+    setPlayerColors({})
+    setRoster(prev => {
+      const next = {}
+      for (const inning of innings) next[inning] = emptyInning()
+      return next
+    })
+  }
+
   function addPlayer(name) {
     const trimmed = name.trim()
     if (!trimmed || players.includes(trimmed)) return
@@ -197,6 +207,7 @@ export default function App() {
             innings={innings}
             onAdd={addPlayer}
             onRemove={removePlayer}
+            onClearAll={clearPlayers}
           />
         </aside>
         <main className="main-content">
@@ -204,14 +215,13 @@ export default function App() {
             <h2>Field Lineup</h2>
             <div className="header-actions">
               <button className="new-roster-btn" onClick={() => {
-                if (!window.confirm('Start a new roster? This will clear all players and assignments.')) return
-                setPlayers([])
-                setPlayerColors({})
+                if (!window.confirm('Start a new lineup? This will clear all innings and assignments.')) return
                 setInnings([1])
                 setRoster({ 1: emptyInning() })
                 setActiveInning(1)
+                setInningNames({})
               }}>
-                New Roster
+                New Lineup
               </button>
               <button className="export-btn" onClick={() => window.print()}>
                 Export to PDF

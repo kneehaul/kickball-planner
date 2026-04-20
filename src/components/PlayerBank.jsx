@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function PlayerBank({ players, playerColors, roster, innings, onAdd, onRemove }) {
+export default function PlayerBank({ players, playerColors, roster, innings, onAdd, onRemove, onClearAll }) {
   const [input, setInput] = useState('')
 
   function isAssigned(name) {
@@ -20,7 +20,22 @@ export default function PlayerBank({ players, playerColors, roster, innings, onA
 
   return (
     <div className="player-bank">
-      <h2>Player Bank</h2>
+      <div className="player-bank-header">
+        <h2>Players</h2>
+        {players.length > 0 && (
+          <button
+            className="clear-players-btn"
+            title="Remove all players"
+            onClick={() => {
+              if (window.confirm('Remove all players? This will also clear all inning assignments.')) {
+                onClearAll()
+              }
+            }}
+          >
+            ↺
+          </button>
+        )}
+      </div>
       <form className="add-player-form" onSubmit={handleSubmit}>
         <input
           type="text"

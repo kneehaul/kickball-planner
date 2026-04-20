@@ -106,11 +106,39 @@ body {
 }
 
 /* ── Player Bank ── */
+.player-bank-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
 .player-bank h2 {
   font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 14px;
   color: #1a6b3c;
+}
+
+.clear-players-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: #aaa;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.1s, border-color 0.1s;
+}
+
+.clear-players-btn:hover {
+  color: #c0392b;
+  border-color: #c0392b;
 }
 
 .add-player-form {
