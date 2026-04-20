@@ -94,11 +94,12 @@ export default function FieldView({ players, playerColors, inningRoster, onAssig
                   style={color ? { borderColor: 'rgba(255,255,255,0.4)', color: '#222' } : undefined}
                 >
                   <option value="">—</option>
-                  {players.map(p => (
-                    <option key={p} value={p}>
-                      {assignedPlayers.has(p) && p !== current ? `${p} ★` : p}
-                    </option>
-                  ))}
+                  {players
+                    .filter(p => !assignedPlayers.has(p) || p === current)
+                    .map(p => (
+                      <option key={p} value={p}>{p}</option>
+                    ))
+                  }
                 </select>
               </div>
             </foreignObject>
