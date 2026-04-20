@@ -109,25 +109,54 @@ export default function App() {
             </button>
           </div>
 
-          <div className="print-inning-label">Inning {activeInning}</div>
-
-          <FieldView
-            players={players}
-            inningRoster={roster[activeInning]}
-            onAssign={(position, playerName) => assignPlayer(activeInning, position, playerName)}
-          />
-
-          <div className="bench-section">
-            <h3>Bench — Inning {activeInning}</h3>
-            <div className="bench-players">
-              {bench.length === 0 ? (
-                <span className="bench-empty">Everyone is assigned</span>
-              ) : (
-                bench.map(name => (
-                  <span key={name} className="bench-player">{name}</span>
-                ))
-              )}
+          {/* Interactive view */}
+          <div className="no-print">
+            <FieldView
+              players={players}
+              inningRoster={roster[activeInning]}
+              onAssign={(position, playerName) => assignPlayer(activeInning, position, playerName)}
+            />
+            <div className="bench-section">
+              <h3>Bench — Inning {activeInning}</h3>
+              <div className="bench-players">
+                {bench.length === 0 ? (
+                  <span className="bench-empty">Everyone is assigned</span>
+                ) : (
+                  bench.map(name => (
+                    <span key={name} className="bench-player">{name}</span>
+                  ))
+                )}
+              </div>
             </div>
+          </div>
+
+          {/* Print-only view: all innings */}
+          <div className="print-only">
+            {innings.map(i => {
+              const benchForInning = getBench(i)
+              return (
+                <div key={i} className="print-inning">
+                  <h2 className="print-inning-label">Inning {i}</h2>
+                  <FieldView
+                    players={players}
+                    inningRoster={roster[i]}
+                    onAssign={() => {}}
+                  />
+                  <div className="bench-section">
+                    <h3>Bench</h3>
+                    <div className="bench-players">
+                      {benchForInning.length === 0 ? (
+                        <span className="bench-empty">Everyone is assigned</span>
+                      ) : (
+                        benchForInning.map(name => (
+                          <span key={name} className="bench-player">{name}</span>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </main>
       </div>

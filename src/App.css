@@ -228,13 +228,6 @@ body {
   background: #e8f5ee;
 }
 
-/* ── Print inning label (hidden on screen) ── */
-.print-inning-label {
-  display: none;
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-}
 
 /* ── Field ── */
 .field-container {
@@ -341,14 +334,34 @@ body {
   font-style: italic;
 }
 
+/* ── Print-only section (hidden on screen) ── */
+.print-only {
+  display: none;
+}
+
 /* ── Print / PDF Export ── */
 @media print {
   .no-print {
     display: none !important;
   }
 
+  .print-only {
+    display: block;
+  }
+
   .print-inning-label {
     display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .print-inning {
+    page-break-after: always;
+  }
+
+  .print-inning:last-child {
+    page-break-after: avoid;
   }
 
   body {
@@ -379,6 +392,7 @@ body {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     border: 1px solid #fde68a;
+    max-width: 100%;
   }
 
   .bench-player {
