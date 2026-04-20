@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PlayerBank from './components/PlayerBank'
 import FieldView from './components/FieldView'
 
@@ -62,6 +62,16 @@ const PLAYER_COLORS = [
   '#6d4c41', // 25 brown
 ]
 
+function load(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback }
+  catch { return fallback }
+}
+
+function save(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)) }
+  catch {}
+}
+
 function emptyInning() {
   const inning = {}
   for (const pos of POSITIONS) inning[pos] = ''
@@ -69,17 +79,61 @@ function emptyInning() {
 }
 
 export default function App() {
-  const [players, setPlayers] = useState([])
-  const [playerColors, setPlayerColors] = useState({})
-  const [innings, setInnings] = useState([1])
-  const [roster, setRoster] = useState(() => ({ 1: emptyInning() }))
-  const [activeInning, setActiveInning] = useState(1)
+  const [players, setPlayers] = useState(() => load('kickball_players', []))
+  const [playerColors, setPlayerColors] = useState(() => load('kickball_playerColors', {}))
+  const [innings, setInnings] = useState(() => load('kickball_innings', [1]))
+  const [roster, setRoster] = useState(() => load('kickball_roster', { 1: emptyInning() }))
+  const [inningNames, setInningNames] = useState(() => load('kickball_inningNames', {}))
+  const [activeInning, setActiveInning] = useState(
+    () => load('kickball_innings', [1])[0] ?? 1
+  )
+  const [editingInning, setEditingInning] = useState(null)
+  const [editValue, setEditValue] = useState('')
+  const editInputRef = useRef(null)
+
+  useEffect(() => { save('kickball_players', players) }, [players])
+  useEffect(() => { save('kickball_playerColors', playerColors) }, [playerColors])
+  useEffect(() => { save('kickball_innings', innings) }, [innings])
+  useEffect(() => { save('kickball_roster', roster) }, [roster])
+  useEffect(() => { save('kickball_inningNames', inningNames) }, [inningNames])
+
+  function inningLabel(i) {
+    return inningNames[i] || `Inning ${i}`
+  }
+
+  function startEditInning(i) {
+    setEditingInning(i)
+    setEditValue(inningNames[i] || `Inning ${i}`)
+    setTimeout(() => editInputRef.current?.select(), 0)
+  }
+
+  function commitEditInning() {
+    const trimmed = editValue.trim()
+    if (trimmed && trimmed !== `Inning ${editingInning}`) {
+      setInningNames(prev => ({ ...prev, [editingInning]: trimmed }))
+    } else if (!trimmed || trimmed === `Inning ${editingInning}`) {
+      setInningNames(prev => { const n = { ...prev }; delete n[editingInning]; return n })
+    }
+    setEditingInning(null)
+  }
 
   function addInning() {
     const next = innings[innings.length - 1] + 1
     setInnings(prev => [...prev, next])
     setRoster(prev => ({ ...prev, [next]: emptyInning() }))
     setActiveInning(next)
+  }
+
+  function removeInning(inning) {
+    if (!window.confirm(`Delete ${inningLabel(inning)}? All assignments for this inning will be lost.`)) return
+    const next = innings.filter(i => i !== inning)
+    setInnings(next)
+    setRoster(prev => { const u = { ...prev }; delete u[inning]; return u })
+    setInningNames(prev => { const u = { ...prev }; delete u[inning]; return u })
+    if (activeInning === inning) {
+      const idx = innings.indexOf(inning)
+      setActiveInning(next[Math.min(idx, next.length - 1)])
+    }
   }
 
   function addPlayer(name) {
@@ -122,6 +176,7 @@ export default function App() {
   }
 
   function getBench(inning) {
+    if (!roster[inning]) return []
     const assigned = new Set(Object.values(roster[inning]).filter(Boolean))
     return players.filter(p => !assigned.has(p))
   }
@@ -147,20 +202,56 @@ export default function App() {
         <main className="main-content">
           <div className="roster-header no-print">
             <h2>Field Lineup</h2>
-            <button className="export-btn" onClick={() => window.print()}>
-              Export to PDF
-            </button>
+            <div className="header-actions">
+              <button className="new-roster-btn" onClick={() => {
+                if (!window.confirm('Start a new roster? This will clear all players and assignments.')) return
+                setPlayers([])
+                setPlayerColors({})
+                setInnings([1])
+                setRoster({ 1: emptyInning() })
+                setActiveInning(1)
+              }}>
+                New Roster
+              </button>
+              <button className="export-btn" onClick={() => window.print()}>
+                Export to PDF
+              </button>
+            </div>
           </div>
 
           <div className="inning-tabs no-print">
             {innings.map(i => (
-              <button
+              <div
                 key={i}
                 className={`inning-tab${activeInning === i ? ' active' : ''}`}
                 onClick={() => setActiveInning(i)}
+                onDoubleClick={e => { e.stopPropagation(); startEditInning(i) }}
               >
-                Inning {i}
-              </button>
+                {editingInning === i ? (
+                  <input
+                    ref={editInputRef}
+                    className="inning-tab-input"
+                    value={editValue}
+                    onChange={e => setEditValue(e.target.value)}
+                    onBlur={commitEditInning}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') commitEditInning()
+                      if (e.key === 'Escape') setEditingInning(null)
+                    }}
+                    onClick={e => e.stopPropagation()}
+                  />
+                ) : (
+                  inningLabel(i)
+                )}
+                {innings.length > 1 && editingInning !== i && (
+                  <span
+                    className="inning-tab-close"
+                    onClick={e => { e.stopPropagation(); removeInning(i) }}
+                  >
+                    ×
+                  </span>
+                )}
+              </div>
             ))}
             <button className="inning-tab add-inning-btn" onClick={addInning}>
               + Add Inning
@@ -177,7 +268,7 @@ export default function App() {
                 onAssign={(position, playerName) => assignPlayer(activeInning, position, playerName)}
               />
               <div className="bench-section">
-                <h3>Bench — Inning {activeInning}</h3>
+                <h3>Bench — {inningLabel(activeInning)}</h3>
                 <div className="bench-players">
                   {bench.length === 0 ? (
                     <span className="bench-empty">Everyone is assigned</span>
@@ -211,7 +302,7 @@ export default function App() {
                       >
                         <td className="summary-inning-col">{i}</td>
                         {POSITIONS.map(pos => {
-                          const player = roster[i][pos]
+                          const player = roster[i]?.[pos]
                           return (
                             <td
                               key={pos}
@@ -250,9 +341,9 @@ export default function App() {
                     const benchForInning = getBench(i)
                     return (
                       <tr key={i}>
-                        <td className="print-summary-inning">{i}</td>
+                        <td className="print-summary-inning">{inningLabel(i)}</td>
                         {POSITIONS.map(pos => {
-                          const player = roster[i][pos]
+                          const player = roster[i]?.[pos]
                           return (
                             <td
                               key={pos}
@@ -286,7 +377,7 @@ export default function App() {
               const benchForInning = getBench(i)
               return (
                 <div key={i} className="print-inning">
-                  <h2 className="print-inning-label">Inning {i}</h2>
+                  <h2 className="print-inning-label">{inningLabel(i)}</h2>
                   <FieldView
                     players={players}
                     playerColors={playerColors}

@@ -67,6 +67,28 @@ body {
   font-weight: 600;
 }
 
+/* ── Header Actions ── */
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.new-roster-btn {
+  background: none;
+  color: #888;
+  border: 1px solid #ccc;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.new-roster-btn:hover {
+  border-color: #c0392b;
+  color: #c0392b;
+}
+
 /* ── Export Button ── */
 .export-btn {
   background: #1a6b3c;
@@ -197,22 +219,49 @@ body {
 }
 
 .inning-tab {
+  display: inline-flex;
+  align-items: center;
   background: none;
   border: 1px solid transparent;
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
-  padding: 7px 18px;
+  padding: 7px 14px;
   font-size: 0.9rem;
   font-weight: 500;
   color: #666;
   cursor: pointer;
   border-radius: 6px 6px 0 0;
   transition: color 0.12s, background 0.12s;
+  user-select: none;
 }
 
 .inning-tab:hover {
   color: #1a6b3c;
   background: #f0f7f3;
+}
+
+.inning-tab-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  line-height: 1;
+  color: #999;
+  opacity: 0;
+  transition: opacity 0.1s, background 0.1s, color 0.1s;
+}
+
+.inning-tab:hover .inning-tab-close {
+  opacity: 1;
+}
+
+.inning-tab-close:hover {
+  background: #e0e0e0;
+  color: #c0392b !important;
 }
 
 .inning-tab.active {
@@ -221,6 +270,18 @@ body {
   border-color: #e0e0e0;
   border-bottom-color: #f5f6fa;
   background: #f5f6fa;
+}
+
+.inning-tab-input {
+  width: 90px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a6b3c;
+  border: none;
+  border-bottom: 2px solid #1a6b3c;
+  background: transparent;
+  outline: none;
+  padding: 0 2px;
 }
 
 .add-inning-btn {
