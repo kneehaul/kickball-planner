@@ -233,7 +233,7 @@ export default function App() {
           <div className="print-only">
 
             {/* Page 1: summary */}
-            <div className="print-inning">
+            <div className="print-inning print-summary-page">
               <h2 className="print-inning-label">Lineup Summary</h2>
               <table className="print-summary-table">
                 <thead>

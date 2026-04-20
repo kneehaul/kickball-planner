@@ -460,12 +460,20 @@ thead .summary-inning-col {
     margin-bottom: 10px;
   }
 
+  .print-summary-page {
+    page-break-after: always;
+    break-after: page;
+    min-height: 99vh;
+  }
+
   .print-inning {
     page-break-after: always;
+    break-after: page;
   }
 
   .print-inning:last-child {
     page-break-after: avoid;
+    break-after: avoid;
   }
 
   .print-summary-table {
@@ -545,8 +553,14 @@ thead .summary-inning-col {
     max-width: 100%;
   }
 
+  .pos-node,
+  .pos-label,
+  .pos-select {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
   .pos-node {
-    background: white;
     box-shadow: none;
     border: 1px solid #ccc;
   }
