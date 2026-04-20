@@ -439,6 +439,10 @@ thead .summary-inning-col {
   display: none;
 }
 
+.print-summary-table {
+  display: none;
+}
+
 /* ── Print / PDF Export ── */
 @media print {
   .no-print {
@@ -462,6 +466,66 @@ thead .summary-inning-col {
 
   .print-inning:last-child {
     page-break-after: avoid;
+  }
+
+  .print-summary-table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  .print-summary-table thead th {
+    background: #333 !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    padding: 6px 8px;
+    text-align: center;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .print-summary-table thead th:first-child {
+    text-align: left;
+  }
+
+  .print-summary-table tbody tr:nth-child(even) {
+    background: #f5f5f5 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-summary-inning {
+    padding: 6px 8px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .print-summary-cell {
+    padding: 6px 4px;
+    text-align: center;
+    font-weight: 700;
+    border-bottom: 1px solid #ddd;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-summary-bench {
+    padding: 6px 8px;
+    border-bottom: 1px solid #ddd;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-bench-chip {
+    font-weight: 700;
+    margin-right: 6px;
+    font-size: 0.78rem;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   body {

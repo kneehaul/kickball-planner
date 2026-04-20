@@ -229,8 +229,59 @@ export default function App() {
             </div>
           </div>
 
-          {/* Print-only view: all innings */}
+          {/* Print-only view */}
           <div className="print-only">
+
+            {/* Page 1: summary */}
+            <div className="print-inning">
+              <h2 className="print-inning-label">Lineup Summary</h2>
+              <table className="print-summary-table">
+                <thead>
+                  <tr>
+                    <th>Inning</th>
+                    {POSITIONS.map(pos => (
+                      <th key={pos} title={pos}>{POS_ABBR[pos]}</th>
+                    ))}
+                    <th>Bench</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {innings.map(i => {
+                    const benchForInning = getBench(i)
+                    return (
+                      <tr key={i}>
+                        <td className="print-summary-inning">{i}</td>
+                        {POSITIONS.map(pos => {
+                          const player = roster[i][pos]
+                          return (
+                            <td
+                              key={pos}
+                              className="print-summary-cell"
+                              style={player ? { color: playerColors[player] } : undefined}
+                            >
+                              {getInitials(player)}
+                            </td>
+                          )
+                        })}
+                        <td className="print-summary-bench">
+                          {benchForInning.map(name => (
+                            <span
+                              key={name}
+                              className="print-bench-chip"
+                              style={{ color: playerColors[name] }}
+                            >
+                              {getInitials(name)}
+                            </span>
+                          ))}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pages 2+: one field per inning */}
             {innings.map(i => {
               const benchForInning = getBench(i)
               return (
