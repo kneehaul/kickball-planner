@@ -15,6 +15,24 @@ const POSITIONS = [
   'Right Field',
 ]
 
+const POS_ABBR = {
+  'Pitcher':      'P',
+  'Catcher':      'C',
+  '1st Base':     '1B',
+  '2nd Base':     '2B',
+  '3rd Base':     '3B',
+  'Shortstop':    'SS',
+  'Left Field':   'LF',
+  'Left Center':  'LC',
+  'Right Center': 'RC',
+  'Right Field':  'RF',
+}
+
+function getInitials(name) {
+  if (!name) return '—'
+  return name.trim().split(/\s+/).map(w => w[0].toUpperCase()).join('')
+}
+
 function emptyInning() {
   const inning = {}
   for (const pos of POSITIONS) inning[pos] = ''
@@ -110,22 +128,54 @@ export default function App() {
           </div>
 
           {/* Interactive view */}
-          <div className="no-print">
-            <FieldView
-              players={players}
-              inningRoster={roster[activeInning]}
-              onAssign={(position, playerName) => assignPlayer(activeInning, position, playerName)}
-            />
-            <div className="bench-section">
-              <h3>Bench — Inning {activeInning}</h3>
-              <div className="bench-players">
-                {bench.length === 0 ? (
-                  <span className="bench-empty">Everyone is assigned</span>
-                ) : (
-                  bench.map(name => (
-                    <span key={name} className="bench-player">{name}</span>
-                  ))
-                )}
+          <div className="field-and-summary no-print">
+            <div className="field-side">
+              <FieldView
+                players={players}
+                inningRoster={roster[activeInning]}
+                onAssign={(position, playerName) => assignPlayer(activeInning, position, playerName)}
+              />
+              <div className="bench-section">
+                <h3>Bench — Inning {activeInning}</h3>
+                <div className="bench-players">
+                  {bench.length === 0 ? (
+                    <span className="bench-empty">Everyone is assigned</span>
+                  ) : (
+                    bench.map(name => (
+                      <span key={name} className="bench-player">{name}</span>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="summary-panel">
+              <h3 className="summary-title">All Innings</h3>
+              <div className="summary-scroll">
+                <table className="summary-table">
+                  <thead>
+                    <tr>
+                      <th className="summary-inning-col"></th>
+                      {POSITIONS.map(pos => (
+                        <th key={pos} title={pos}>{POS_ABBR[pos]}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {innings.map(i => (
+                      <tr
+                        key={i}
+                        className={activeInning === i ? 'summary-row active' : 'summary-row'}
+                        onClick={() => setActiveInning(i)}
+                      >
+                        <td className="summary-inning-col">{i}</td>
+                        {POSITIONS.map(pos => (
+                          <td key={pos}>{getInitials(roster[i][pos])}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

@@ -229,9 +229,102 @@ body {
 }
 
 
+/* ── Field + Summary Layout ── */
+.field-and-summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.field-side {
+  flex: 1;
+  min-width: 0;
+  max-width: 680px;
+}
+
+/* ── Summary Panel ── */
+.summary-panel {
+  flex-shrink: 0;
+  width: 260px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  padding: 12px 10px;
+  overflow: hidden;
+}
+
+.summary-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1a6b3c;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.summary-scroll {
+  overflow-x: auto;
+}
+
+.summary-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.72rem;
+}
+
+.summary-table thead th {
+  background: #1a6b3c;
+  color: white;
+  padding: 5px 3px;
+  text-align: center;
+  font-weight: 700;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+}
+
+.summary-inning-col {
+  font-weight: 700;
+  color: #555;
+  padding: 4px 5px !important;
+  text-align: center;
+  white-space: nowrap;
+}
+
+thead .summary-inning-col {
+  color: white;
+}
+
+.summary-row {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.summary-row td {
+  padding: 4px 3px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+  color: #555;
+  white-space: nowrap;
+}
+
+.summary-row:hover td {
+  background: #f0f7f3;
+}
+
+.summary-row.active td {
+  background: #e6f4ec;
+  color: #1a6b3c;
+  font-weight: 600;
+}
+
+.summary-row.active .summary-inning-col {
+  color: #1a6b3c;
+}
+
 /* ── Field ── */
 .field-container {
-  max-width: 680px;
+  max-width: 100%;
 }
 
 .field-svg {
@@ -302,7 +395,6 @@ body {
   background: #fef9ec;
   border-radius: 8px;
   border: 1px solid #fde68a;
-  max-width: 680px;
 }
 
 .bench-section h3 {
