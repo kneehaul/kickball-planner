@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 
-export default function PlayerBank({ players, playerColors, roster, innings, onAdd, onRemove, onClearAll }) {
+export default function PlayerBank({ players, playerColors, roster, innings, onAdd, onRemove, onClearAll, onReorder }) {
   const [input, setInput] = useState('')
+  const [dragIndex, setDragIndex] = useState(null)
+  const [dragOverIndex, setDragOverIndex] = useState(null)
 
   function isAssigned(name) {
     for (const inning of innings) {
@@ -18,10 +20,38 @@ export default function PlayerBank({ players, playerColors, roster, innings, onA
     setInput('')
   }
 
+  function handleDragStart(e, index) {
+    setDragIndex(index)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  function handleDragOver(e, index) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    if (index !== dragOverIndex) setDragOverIndex(index)
+  }
+
+  function handleDrop(e, index) {
+    e.preventDefault()
+    if (dragIndex !== null && dragIndex !== index) {
+      const reordered = [...players]
+      const [moved] = reordered.splice(dragIndex, 1)
+      reordered.splice(index, 0, moved)
+      onReorder(reordered)
+    }
+    setDragIndex(null)
+    setDragOverIndex(null)
+  }
+
+  function handleDragEnd() {
+    setDragIndex(null)
+    setDragOverIndex(null)
+  }
+
   return (
     <div className="player-bank">
       <div className="player-bank-header">
-        <h2>Players</h2>
+        <h2>Kicking Order</h2>
         {players.length > 0 && (
           <button
             className="clear-players-btn"
@@ -41,6 +71,7 @@ export default function PlayerBank({ players, playerColors, roster, innings, onA
           type="text"
           placeholder="Player name"
           value={input}
+          maxLength={20}
           onChange={e => setInput(e.target.value)}
         />
         <button type="submit" disabled={!input.trim()}>
@@ -51,8 +82,22 @@ export default function PlayerBank({ players, playerColors, roster, innings, onA
         <p className="empty-bank">No players yet.</p>
       ) : (
         <ul className="player-list">
-          {players.map(name => (
-            <li key={name} className="player-item">
+          {players.map((name, index) => (
+            <li
+              key={name}
+              className={
+                'player-item' +
+                (dragOverIndex === index && dragIndex !== index ? ' drag-over' : '') +
+                (dragIndex === index ? ' dragging' : '')
+              }
+              draggable
+              onDragStart={e => handleDragStart(e, index)}
+              onDragOver={e => handleDragOver(e, index)}
+              onDrop={e => handleDrop(e, index)}
+              onDragEnd={handleDragEnd}
+            >
+              <span className="player-number">{index + 1}</span>
+              <span className="drag-handle" title="Drag to reorder">⠿</span>
               <span className="player-color-dot" style={{ background: playerColors[name] }} />
               <span className="player-name">{name}</span>
               <button

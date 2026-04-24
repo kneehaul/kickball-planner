@@ -186,13 +186,44 @@ body {
 .player-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 6px;
   padding: 5px 4px;
   border-bottom: 1px solid #f0f0f0;
+  cursor: grab;
 }
 
 .player-item:last-child {
   border-bottom: none;
+}
+
+.player-item.dragging {
+  opacity: 0.4;
+}
+
+.player-item.drag-over {
+  border-top: 2px solid #1a6b3c;
+}
+
+.player-number {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #bbb;
+  width: 16px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.drag-handle {
+  font-size: 1rem;
+  color: #ccc;
+  cursor: grab;
+  flex-shrink: 0;
+  user-select: none;
+  line-height: 1;
+}
+
+.player-item:hover .drag-handle {
+  color: #aaa;
 }
 
 .player-color-dot {
@@ -207,6 +238,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1;
 }
 
 .remove-btn {

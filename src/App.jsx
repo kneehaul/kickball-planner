@@ -208,6 +208,7 @@ export default function App() {
             onAdd={addPlayer}
             onRemove={removePlayer}
             onClearAll={clearPlayers}
+            onReorder={setPlayers}
           />
         </aside>
         <main className="main-content">
