@@ -361,7 +361,6 @@ body {
 .field-and-summary {
   display: flex;
   align-items: flex-start;
-  gap: 20px;
 }
 
 .field-side {
@@ -372,17 +371,16 @@ body {
 
 /* ── Summary Panel ── */
 .summary-panel {
-  flex-shrink: 0;
-  width: 260px;
   background: white;
   border-radius: 8px;
   box-shadow: 0 1px 6px rgba(0,0,0,0.1);
-  padding: 12px 10px;
+  padding: 14px 12px;
+  margin-top: 16px;
   overflow: hidden;
 }
 
 .summary-title {
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: #1a6b3c;
   text-transform: uppercase;
@@ -397,13 +395,13 @@ body {
 .summary-table {
   border-collapse: collapse;
   width: 100%;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
 }
 
 .summary-table thead th {
   background: #1a6b3c;
   color: white;
-  padding: 5px 3px;
+  padding: 7px 10px;
   text-align: center;
   font-weight: 700;
   white-space: nowrap;
@@ -414,13 +412,14 @@ body {
 .summary-inning-col {
   font-weight: 700;
   color: #555;
-  padding: 4px 5px !important;
-  text-align: center;
+  padding: 6px 10px !important;
+  text-align: left;
   white-space: nowrap;
 }
 
 thead .summary-inning-col {
   color: white;
+  text-align: left;
 }
 
 .summary-row {
@@ -429,7 +428,7 @@ thead .summary-inning-col {
 }
 
 .summary-row td {
-  padding: 4px 3px;
+  padding: 6px 10px;
   text-align: center;
   border-bottom: 1px solid #f0f0f0;
   color: #555;
@@ -632,10 +631,6 @@ thead .summary-inning-col {
     max-width: 100%;
   }
 
-  .summary-panel {
-    width: 100%;
-  }
-
   .summary-scroll {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -652,6 +647,11 @@ thead .summary-inning-col {
 }
 
 /* ── Print / PDF Export ── */
+@page {
+  size: landscape;
+  margin: 0.5in;
+}
+
 @media print {
   .no-print {
     display: none !important;
@@ -684,19 +684,90 @@ thead .summary-inning-col {
     break-after: avoid;
   }
 
+  /* Two-column layout for summary page */
+  .print-summary-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  .print-section-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #333;
+    margin-bottom: 8px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 4px;
+  }
+
+  /* Kicking order column */
+  .print-kicking-order {
+    flex-shrink: 0;
+    width: 160px;
+  }
+
+  .print-kicking-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .print-kicking-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #eee;
+    counter-increment: kicking-order;
+  }
+
+  .print-kicking-item::before {
+    content: counter(kicking-order) ".";
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #aaa;
+    width: 18px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .print-kicking-list {
+    counter-reset: kicking-order;
+  }
+
+  .print-kicking-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Summary table column */
+  .print-summary-right {
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+  }
+
   .print-summary-table {
     display: table;
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.82rem;
+    font-size: 0.7rem;
+    table-layout: auto;
   }
 
   .print-summary-table thead th {
-    background: #333 !important;
+    background: #1a6b3c !important;
     color: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-    padding: 6px 8px;
+    padding: 5px 5px;
     text-align: center;
     font-weight: 700;
     white-space: nowrap;
@@ -713,33 +784,20 @@ thead .summary-inning-col {
   }
 
   .print-summary-inning {
-    padding: 6px 8px;
+    padding: 4px 6px;
     font-weight: 700;
     color: #333;
-    text-align: center;
+    text-align: left;
     border-bottom: 1px solid #ddd;
+    white-space: nowrap;
   }
 
   .print-summary-cell {
-    padding: 6px 4px;
+    padding: 4px 4px;
     text-align: center;
-    font-weight: 700;
+    font-weight: 600;
     border-bottom: 1px solid #ddd;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .print-summary-bench {
-    padding: 6px 8px;
-    border-bottom: 1px solid #ddd;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .print-bench-chip {
-    font-weight: 700;
-    margin-right: 6px;
-    font-size: 0.78rem;
+    white-space: nowrap;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }

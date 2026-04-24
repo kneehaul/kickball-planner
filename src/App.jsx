@@ -290,43 +290,43 @@ export default function App() {
                   )}
                 </div>
               </div>
-            </div>
 
-            <div className="summary-panel">
-              <h3 className="summary-title">All Innings</h3>
-              <div className="summary-scroll">
-                <table className="summary-table">
-                  <thead>
-                    <tr>
-                      <th className="summary-inning-col"></th>
-                      {POSITIONS.map(pos => (
-                        <th key={pos} title={pos}>{POS_ABBR[pos]}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {innings.map(i => (
-                      <tr
-                        key={i}
-                        className={activeInning === i ? 'summary-row active' : 'summary-row'}
-                        onClick={() => setActiveInning(i)}
-                      >
-                        <td className="summary-inning-col">{i}</td>
-                        {POSITIONS.map(pos => {
-                          const player = roster[i]?.[pos]
-                          return (
-                            <td
-                              key={pos}
-                              style={player ? { color: playerColors[player], fontWeight: 700 } : undefined}
-                            >
-                              {getInitials(player)}
-                            </td>
-                          )
-                        })}
+              <div className="summary-panel">
+                <h3 className="summary-title">All Innings</h3>
+                <div className="summary-scroll">
+                  <table className="summary-table">
+                    <thead>
+                      <tr>
+                        <th className="summary-inning-col">Inning</th>
+                        {POSITIONS.map(pos => (
+                          <th key={pos}>{pos}</th>
+                        ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {innings.map(i => (
+                        <tr
+                          key={i}
+                          className={activeInning === i ? 'summary-row active' : 'summary-row'}
+                          onClick={() => setActiveInning(i)}
+                        >
+                          <td className="summary-inning-col">{inningLabel(i)}</td>
+                          {POSITIONS.map(pos => {
+                            const player = roster[i]?.[pos]
+                            return (
+                              <td
+                                key={pos}
+                                style={player ? { color: playerColors[player], fontWeight: 700 } : undefined}
+                              >
+                                {player || '—'}
+                              </td>
+                            )
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -334,53 +334,54 @@ export default function App() {
           {/* Print-only view */}
           <div className="print-only">
 
-            {/* Page 1: summary */}
+            {/* Page 1: kicking order + summary */}
             <div className="print-inning print-summary-page">
               <h2 className="print-inning-label">Lineup Summary</h2>
-              <table className="print-summary-table">
-                <thead>
-                  <tr>
-                    <th>Inning</th>
-                    {POSITIONS.map(pos => (
-                      <th key={pos} title={pos}>{POS_ABBR[pos]}</th>
+              <div className="print-summary-layout">
+                <div className="print-kicking-order">
+                  <h3 className="print-section-label">Kicking Order</h3>
+                  <ol className="print-kicking-list">
+                    {players.map(name => (
+                      <li key={name} className="print-kicking-item">
+                        <span className="print-kicking-dot" style={{ background: playerColors[name] }} />
+                        {name}
+                      </li>
                     ))}
-                    <th>Bench</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {innings.map(i => {
-                    const benchForInning = getBench(i)
-                    return (
-                      <tr key={i}>
-                        <td className="print-summary-inning">{inningLabel(i)}</td>
-                        {POSITIONS.map(pos => {
-                          const player = roster[i]?.[pos]
-                          return (
-                            <td
-                              key={pos}
-                              className="print-summary-cell"
-                              style={player ? { color: playerColors[player] } : undefined}
-                            >
-                              {getInitials(player)}
-                            </td>
-                          )
-                        })}
-                        <td className="print-summary-bench">
-                          {benchForInning.map(name => (
-                            <span
-                              key={name}
-                              className="print-bench-chip"
-                              style={{ color: playerColors[name] }}
-                            >
-                              {getInitials(name)}
-                            </span>
-                          ))}
-                        </td>
+                  </ol>
+                </div>
+                <div className="print-summary-right">
+                  <h3 className="print-section-label">Inning Assignments</h3>
+                  <table className="print-summary-table">
+                    <thead>
+                      <tr>
+                        <th className="print-summary-inning">Inning</th>
+                        {POSITIONS.map(pos => (
+                          <th key={pos} title={pos}>{POS_ABBR[pos]}</th>
+                        ))}
                       </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody>
+                      {innings.map(i => (
+                        <tr key={i}>
+                          <td className="print-summary-inning">{inningLabel(i)}</td>
+                          {POSITIONS.map(pos => {
+                            const player = roster[i]?.[pos]
+                            return (
+                              <td
+                                key={pos}
+                                className="print-summary-cell"
+                                style={player ? { color: playerColors[player] } : undefined}
+                              >
+                                {player || '—'}
+                              </td>
+                            )
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
 
             {/* Pages 2+: one field per inning */}
