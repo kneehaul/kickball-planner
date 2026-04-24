@@ -79,11 +79,11 @@ export default function FieldView({ players, playerColors, inningRoster, onAssig
             <foreignObject key={name} x={x} y={y} width={NODE_W} height={NODE_H}>
               <div
                 className="pos-node"
-                style={color ? { background: color, boxShadow: `0 1px 4px ${color}99` } : undefined}
+                style={color ? { background: color, boxShadow: `0 2px 8px ${color}bb` } : undefined}
               >
                 <span
                   className="pos-label"
-                  style={color ? { color: 'rgba(255,255,255,0.85)' } : undefined}
+                  style={color ? { color: 'rgba(255,255,255,0.8)' } : undefined}
                 >
                   {name}
                 </span>
@@ -91,7 +91,12 @@ export default function FieldView({ players, playerColors, inningRoster, onAssig
                   value={current}
                   onChange={e => onAssign(name, e.target.value)}
                   className={`pos-select${current ? ' assigned' : ''}`}
-                  style={color ? { borderColor: 'rgba(255,255,255,0.4)', color: '#222' } : undefined}
+                  style={color ? {
+                    background: 'rgba(0,0,0,0.18)',
+                    borderColor: 'rgba(255,255,255,0.3)',
+                    color: 'white',
+                    fontWeight: 700,
+                  } : undefined}
                 >
                   <option value="">—</option>
                   {players
