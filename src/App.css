@@ -366,7 +366,6 @@ body {
 .field-side {
   flex: 1;
   min-width: 0;
-  max-width: 680px;
 }
 
 /* ── Summary Panel ── */
@@ -451,7 +450,7 @@ thead .summary-inning-col {
 
 /* ── Field ── */
 .field-container {
-  max-width: 100%;
+  max-width: 650px;
 }
 
 .field-svg {
@@ -523,6 +522,7 @@ thead .summary-inning-col {
   background: #fef9ec;
   border-radius: 8px;
   border: 1px solid #fde68a;
+  max-width: 650px;
 }
 
 .bench-section h3 {
