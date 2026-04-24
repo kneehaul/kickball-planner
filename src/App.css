@@ -670,17 +670,30 @@ thead .summary-inning-col {
   .print-summary-page {
     page-break-after: always;
     break-after: page;
-    min-height: 99vh;
   }
 
   .print-inning {
     page-break-after: always;
     break-after: page;
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   .print-inning:last-child {
     page-break-after: avoid;
     break-after: avoid;
+  }
+
+  .print-field-svg {
+    display: block;
+    max-height: 5.2in;
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .print-inning .bench-section {
+    margin-top: 8px;
   }
 
   /* Two-column layout for summary page */
