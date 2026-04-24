@@ -1,9 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 export default function PlayerBank({ players, playerColors, roster, innings, onAdd, onRemove, onClearAll, onReorder }) {
   const [input, setInput] = useState('')
   const [dragIndex, setDragIndex] = useState(null)
   const [dragOverIndex, setDragOverIndex] = useState(null)
+
+  const listRef = useRef(null)
+  const touchFrom = useRef(null)
+  const touchOver = useRef(null)
+
+  // Attach a non-passive touchmove listener so we can preventDefault (stops page scroll during drag)
+  useEffect(() => {
+    const list = listRef.current
+    if (!list) return
+
+    function onTouchMove(e) {
+      if (touchFrom.current === null) return
+      e.preventDefault()
+      const touch = e.touches[0]
+      const el = document.elementFromPoint(touch.clientX, touch.clientY)
+      const item = el?.closest('[data-index]')
+      if (item) {
+        const idx = parseInt(item.dataset.index, 10)
+        if (!isNaN(idx) && idx !== touchOver.current) {
+          touchOver.current = idx
+          setDragOverIndex(idx)
+        }
+      }
+    }
+
+    list.addEventListener('touchmove', onTouchMove, { passive: false })
+    return () => list.removeEventListener('touchmove', onTouchMove)
+  }, [])
 
   function isAssigned(name) {
     for (const inning of innings) {
@@ -20,6 +48,7 @@ export default function PlayerBank({ players, playerColors, roster, innings, onA
     setInput('')
   }
 
+  // Mouse drag handlers
   function handleDragStart(e, index) {
     setDragIndex(index)
     e.dataTransfer.effectAllowed = 'move'
@@ -44,6 +73,29 @@ export default function PlayerBank({ players, playerColors, roster, innings, onA
   }
 
   function handleDragEnd() {
+    setDragIndex(null)
+    setDragOverIndex(null)
+  }
+
+  // Touch drag handlers
+  function handleTouchStart(e, index) {
+    touchFrom.current = index
+    touchOver.current = index
+    setDragIndex(index)
+    setDragOverIndex(index)
+  }
+
+  function handleTouchEnd() {
+    const from = touchFrom.current
+    const to = touchOver.current
+    if (from !== null && to !== null && from !== to) {
+      const reordered = [...players]
+      const [moved] = reordered.splice(from, 1)
+      reordered.splice(to, 0, moved)
+      onReorder(reordered)
+    }
+    touchFrom.current = null
+    touchOver.current = null
     setDragIndex(null)
     setDragOverIndex(null)
   }
@@ -81,10 +133,11 @@ export default function PlayerBank({ players, playerColors, roster, innings, onA
       {players.length === 0 ? (
         <p className="empty-bank">No players yet.</p>
       ) : (
-        <ul className="player-list">
+        <ul className="player-list" ref={listRef}>
           {players.map((name, index) => (
             <li
               key={name}
+              data-index={index}
               className={
                 'player-item' +
                 (dragOverIndex === index && dragIndex !== index ? ' drag-over' : '') +
@@ -95,6 +148,8 @@ export default function PlayerBank({ players, playerColors, roster, innings, onA
               onDragOver={e => handleDragOver(e, index)}
               onDrop={e => handleDrop(e, index)}
               onDragEnd={handleDragEnd}
+              onTouchStart={e => handleTouchStart(e, index)}
+              onTouchEnd={handleTouchEnd}
             >
               <span className="player-number">{index + 1}</span>
               <span className="drag-handle" title="Drag to reorder">⠿</span>
