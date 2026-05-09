@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "kickball-planner",
+  "main": "cloudflare-workers/index.ts",
   "compatibility_date": "2026-04-20",
   "observability": {
     "enabled": true
