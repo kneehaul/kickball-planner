@@ -4,6 +4,8 @@ A browser-based kickball roster planning tool for managing player assignments ac
 
 Website: https://kickball-planner.npabba.com/
 
+<img width="1277" height="1043" alt="Screenshot 2026-05-09 at 2 37 01 PM" src="https://github.com/user-attachments/assets/0ea53394-de63-441f-b313-ea2334e2e06e" />
+
 ## Features
 
 - **Player management** — add/remove players, assign per-player colors, reorder via drag-and-drop or touch
