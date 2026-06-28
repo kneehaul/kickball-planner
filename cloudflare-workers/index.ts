@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 
 type Bindings = {
-  // D1, secrets, and other bindings will go here as we add them.
+  DB: D1Database;
+  // Additional secrets and bindings will go here as we add them.
 };
 
 const app = new Hono<{ Bindings: Bindings }>();

@@ -9,6 +9,14 @@
   "assets": {
     "not_found_handling": "single-page-application"
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "kickball-planner",
+      "database_id": "51709b51-2814-4524-9a4c-37ced8d673ff",
+      "migrations_dir": "cloudflare-workers/migrations"
+    }
+  ],
   "compatibility_flags": [
     "nodejs_compat"
   ]
